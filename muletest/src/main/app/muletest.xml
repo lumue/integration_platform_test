@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+    <data-mapper:config name="json_to_csv" transformationGraphPath="json_to_csv.grf" doc:name="json_to_csv"/>
+    <flow name="muletestFlow2" doc:name="muletestFlow2">
+        <poll doc:name="Poll" frequency="1000">
+            <http:outbound-endpoint exchange-pattern="request-response" host="192.168.1.106" port="8080" path="jsonrpc?request=%7B%22jsonrpc%22%3A%222.0%22%2C%22id%22%3A%221%22%2C%22method%22%3A%22VideoLibrary.GetMovies%22%7D" method="GET" tracking:enable-default-events="true" encoding="UTF-8" mimeType="application/json"  doc:name="HTTP"/>
+        </poll>
+        <data-mapper:transform doc:name="DataMapper" config-ref="json_to_csv"/>
+        <file:outbound-endpoint path="/home/lm/muletest/out" responseTimeout="10000" doc:name="File"/>
+    </flow>
+</mule>
